@@ -45,14 +45,14 @@ class DiaryDatabase extends Database {
         );
     }
 
-    fetchUser(id) {
+    async fetchUser(id) {
         const sql = `SELECT * FROM users WHERE id=?; `;
 
-        return this.query({ sql, args: [id] }).then((resultSet) => {
+        try {
+            const resultSet = await this.query({ sql, args: [id] });
             const { rows: { _array } } = resultSet;
             const user = _array[0];
-            const { id, gender, email, first_name, last_name, birth_date } = user;
-
+            const { id: id_1, gender, email, first_name, last_name, birth_date } = user;
             return {
                 id,
                 firstName: first_name,
@@ -61,19 +61,43 @@ class DiaryDatabase extends Database {
                 email,
                 birthDate: birth_date,
             };
-        }).catch((error) => {
+        } catch (error) {
             console.log(`db.fetchUser sql: ${sql} error: ${JSON.stringify(error, null, '\t')}`);
-        });
+        }
     }
 
-    updateUser(user) {
+    async updateUser(user) {
         const { id, firstName, lastName, gender, birthDate, email } = user;
         const sql = `UPDATE users SET first_name=?, last_name=?, gender=?, birth_date=?, email=? WHERE id=?;`
-        return this.query({ sql, args: [firstName, lastName, gender, birthDate, email, id] }).then((resultSet) => {
+        try {
+            const resultSet = await this.query({ sql, args: [firstName, lastName, gender, birthDate, email, id] });
             return resultSet;
-        }).catch((error) => {
+        } catch (error) {
             console.log(`db.updateUser sql: ${sql} error: ${JSON.stringify(error, null, '\t')}`);
-        });
+        }
+    }
+
+    async fetchDiaries(userId) {
+        const sql = `SELECT * FROM diaries WHERE user_id=?;`;
+        try {
+            const resultSet = await this.query({ sql, args: [userId] });
+            const { rows: { _array } } = resultSet;
+            return _array;
+        } catch (error) {
+            console.log(`db.fetchDiaries sql: ${sql} error: ${JSON.stringify(error, null, '\t')}`);
+        }
+    }
+
+    async insertDiary(diary) {
+        const { userId, date, content } = diary;
+        const sql = `INSERT INTO diaries (user_id, date, content) VALUES(?, ?, ?);`;
+        try {
+            const resultSet = await this.query({ sql, args: [userId, date, content] });
+            console.log(resultSet);
+            return resultSet;
+        } catch (error) {
+            console.log(`db.insertDiary sql: ${sql} error: ${JSON.stringify(error, null, '\t')}`);
+        }
     }
 }
 

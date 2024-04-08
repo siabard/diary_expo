@@ -19,7 +19,14 @@ const toastMessage = (message) => {
     );
 };
 
+const extractStringDate =  (date = new Date()) => {
+    date = new Date(date);
+    const [year, month, day] = [date.getFullYear(), ((date.getMonth() + 1) + '').padStart(2, '0'), (date.getDate() + '').padStart(2, '0')];
+    return `${year}-${month}-${day}`
+};
+
 export {
+    extractStringDate,
     truncateText,
     toastMessage,
 }

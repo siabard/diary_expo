@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import * as Font from '../constants/Font';
 import * as Colors from '../constants/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { extractStringDate } from "../utils/Utilities";
 
 const DatePicker = ({ style, value, onChangeDate }) => {
     const [show, setShow] = useState(false);
@@ -16,11 +17,7 @@ const DatePicker = ({ style, value, onChangeDate }) => {
     const open = () => { setShow(true) };
     const close = () => { setShow(false) };
 
-    const extractStringDate = (date) => {
-        date = new Date(date);
-        const [year, month, day] = [date.getFullYear(), ((date.getMonth() + 1) + '').padStart(2, '0'), (date.getDate() + '').padStart(2, '0')];
-        return `${year}-${month}-${day}`
-    }
+
     return (
         <View>
             <TouchableOpacity onPress={open}>
