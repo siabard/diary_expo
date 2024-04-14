@@ -4,30 +4,26 @@ import * as Colors from '../constants/Colors';
 import Account from "./account/Account";
 import Create from "./create/Create";
 import Diary from "./diary/Diary";
-
+import Home from "./home/Home";
 const Container = SafeAreaView;
-const Home = View;
 const Browse = View;
 
 
-const Screens = ({ screenStates, methods }) => {
-    const { currentScreen, user, diaries } = screenStates;
+const Screens = ({ screenStates, methods, style }) => {
+    const { currentScreen } = screenStates;
 
     return (
-        <Container style={styles.container}>
-            <Home style={[styles.screen, {backgroundColor: Colors.PRIMARY},  (currentScreen == 'home') ? styles.show : styles.hide]}>
-                <ScreenTitle title={'Home'} />
-                <Text>{JSON.stringify(user)}</Text>
-                <Text>{JSON.stringify(diaries)}</Text>
+        <Container style={{...styles.container, ...style}}>
+            <Home screenStates={screenStates} methods={methods} style={(currentScreen == 'home') ? styles.show : styles.hide}>
             </Home>
-            <Create screenStates={screenStates} methods={methods} style={[ (currentScreen == 'create') ? styles.show : styles.hide]}>
+            <Create screenStates={screenStates} methods={methods} style={(currentScreen == 'create') ? styles.show : styles.hide}>
             </Create>
-            <Diary screenStates={screenStates} methods={methods} style={[ (currentScreen == 'diary') ? styles.show : styles.hide]}>
+            <Diary screenStates={screenStates} methods={methods} style={(currentScreen == 'diary') ? styles.show : styles.hide}>
             </Diary>
-            <Browse style={[styles.screen, {backgroundColor: Colors.WARNING}, (currentScreen == 'browse') ? styles.show : styles.hide]}>
+            <Browse style={(currentScreen == 'browse') ? styles.show : styles.hide}>
                 <ScreenTitle title={'Browse'} />
             </Browse>
-            <Account screenStates={screenStates} methods={methods} style={ (currentScreen == 'account') ? styles.show : styles.hide}></Account>
+            <Account screenStates={screenStates} methods={methods} style={(currentScreen == 'account') ? styles.show : styles.hide}></Account>
         </Container>
     );
 };

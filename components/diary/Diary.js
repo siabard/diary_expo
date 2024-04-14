@@ -3,21 +3,30 @@ import { StyleSheet, Text, View } from "react-native";
 import * as Font from '../../constants/Font';
 import * as Colors from '../../constants/Colors';
 import ScreenTitle from "../ScreenTitle";
+import DiaryDetail from "./DiaryDetail";
+import DiaryForm from "./DiaryForm";
 
 
-const Diary = ({style, screenStates}) => {
-    const {diary} = screenStates;
+const Diary = ({ style, screenStates, methods }) => {
+    const { diary } = screenStates;
 
     const Container = View;
     const Body = View;
 
     return (
-        <Container style={[style, styles.container]}>
+        <Container style={{...styles.container, ...style}}>
             <View style={styles.header}>
-                <ScreenTitle label={`Diary`} icon="arrow-left" />
+                <ScreenTitle label={`DIARY`} icon="arrow-left" onPressIcon={() => methods.goBack()} />
             </View>
             <Body style={styles.body}>
-                <Text style={{textAlign: 'center'}}>{JSON.stringify(diary)}</Text>
+                {
+                    (diary.edit) ? (
+                        <DiaryForm screenStates={screenStates} methods={methods} />
+                    ) : (
+                        <DiaryDetail screenStates={screenStates} methods={methods} />
+                    )
+                }
+
             </Body>
         </Container>
     );
@@ -25,6 +34,7 @@ const Diary = ({style, screenStates}) => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: Colors.DEFAULT,
         flexDirection: 'column',
     },

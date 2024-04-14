@@ -35,7 +35,7 @@ const AppScreen = ({ screenStates, methods }) => {
 
     return (
         <Container style={styles.container}>
-            <LoadingScreen />
+            <LoadingScreen style={ fadeAnimation == 1 ? {flex: 1} : {flex: 0, height: 0} } />
             <Animated.View style={[styles.fadingContainer, { opacity: fadeAnimation }]}>
                 <Screens screenStates={screenStates} methods={animatedMethods}></Screens>
             </Animated.View>
@@ -51,10 +51,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         backgroundColor: '#ddd',
-    },
-    screen: {
-        flex: 0.9,
-        backgroundColor: 'skyblue',
     },
     footer: {
         flex: 0.1,

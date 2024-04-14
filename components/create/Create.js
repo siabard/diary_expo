@@ -8,9 +8,8 @@ import CreateForm from "./CreateForm";
 const Create = ({ style, methods, screenStates }) => {
     const Container = View;
     const Body = View;
-
     return (
-        <Container style={[style, styles.container, ]}>
+        <Container style={{...styles.container, ...style}}>
             <StatusBar />
             <View style={styles.header}>
                 <ScreenTitle icon={`pen`} title={`WRITE DIARY`} />
@@ -24,6 +23,7 @@ const Create = ({ style, methods, screenStates }) => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: Colors.DEFAULT,
         flexDirection: 'column'
     },

@@ -25,8 +25,21 @@ const extractStringDate =  (date = new Date()) => {
     return `${year}-${month}-${day}`
 };
 
+const getDate = (date = new Date()) => {
+    const months = [
+        `Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`
+    ];
+    return {
+        month: months[date.getMonth()],
+        year: date.getFullYear(),
+        day: (date.getDate() + ``).padStart(2, '0')
+    }
+};
+
+
 export {
     extractStringDate,
     truncateText,
     toastMessage,
+    getDate,
 }

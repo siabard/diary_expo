@@ -5,13 +5,13 @@ import React from "react";
 import * as Colors from '../constants/Colors';
 import * as Font from '../constants/Font';
 
-const LoadingScreen = () => {
+const LoadingScreen = ({style}) => {
     const Container = SafeAreaView;
     const Logo = View;
     const Body = View;
 
     return (
-        <Container style={styles.container}>
+        <Container style={[styles.container, style]}>
             <Body style={styles.body}>
                 <Logo>
                     <Text style={{ textAlign: 'center' }}>

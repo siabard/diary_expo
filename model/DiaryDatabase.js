@@ -77,8 +77,8 @@ class DiaryDatabase extends Database {
         }
     }
 
-    async fetchDiaries(userId) {
-        const sql = `SELECT * FROM diaries WHERE user_id=?;`;
+    async fetchDiaries(userId, limit=10, order='DESC') {
+        const sql = `SELECT * FROM diaries WHERE user_id=? ORDER BY date ${order} LIMIT ${limit};`;
         try {
             const resultSet = await this.query({ sql, args: [userId] });
             const { rows: { _array } } = resultSet;
@@ -97,6 +97,27 @@ class DiaryDatabase extends Database {
             return resultSet;
         } catch (error) {
             console.log(`db.insertDiary sql: ${sql} error: ${JSON.stringify(error, null, '\t')}`);
+        }
+    }
+    
+    async updateDiary(diary) {
+        const { id, content } = diary;
+        const sql = `UPDATE diaries SET content=? WHERE id=?;`
+        try {
+            const resultSet = await this.query({ sql, args: [content, id] });
+            return resultSet;
+        } catch (error) {
+            console.log(`db.updateDiary sql: ${sql} error: ${JSON.stringify(error, null, '\t')}`);
+        }
+    }
+
+    async deleteDiary(id) {
+        const sql = `DELETE FROM diaries WHERE id=?;`
+        try {
+            const resultSet = await this.query({ sql, args: [id] });
+            return resultSet;
+        } catch (error) {
+            console.log(`db.deleteDiary sql: ${sql} error: ${JSON.stringify(error, null, '\t')}`);
         }
     }
 }

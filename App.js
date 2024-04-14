@@ -10,9 +10,9 @@ export default function App() {
   const [previousScreen, setPreviousScreen] = useState('home');
   const [user, setUser] = useState({});
   const [diaries, setDiaries] = useState([]);
-  const [diary, setDiary] = useState({});
+  const [diary, setDiary] = useState({ edit: false, });
 
-  const screenStates = { currentScreen: currentScreen, previousScreen: previousScreen, user: user, diaries: diaries, diary: {} };
+  const screenStates = { currentScreen: currentScreen, previousScreen: previousScreen, user: user, diaries: diaries, diary: diary };
 
   const gotoScreen = (screenName, callback = () => { }) => {
     setPreviousScreen(currentScreen);
@@ -23,7 +23,7 @@ export default function App() {
 
   const updateUser = async (user, callback) => {
     try {
-      const { rowsAffected } = await db.updateUser(user, callback);
+      const { rowsAffected } = await db.updateUser(user);
       setUser((prevUser) => {
         return {
           ...prevUser, ...user
@@ -37,15 +37,16 @@ export default function App() {
 
   const insertDiary = async (diary, callback) => {
     try {
-      const { rowsAffected } = await db.insertDiary(diary, callback);
+      const { rowsAffected } = await db.insertDiary(diary);
       setDiaries((prevs) => {
         return [
-          ...prevs,  diary
+          ...prevs, diary
         ].sort((a, b) => {
           return (Date.parse(b.date) - Date.parse(a.date));
-        
-        });        
+
+        });
       })
+
       callback(rowsAffected);
     } catch (error) {
       console.log(error.message);
@@ -53,8 +54,64 @@ export default function App() {
   };
 
 
-  const methods = { goto: gotoScreen, updateUser: updateUser, insertDiary: insertDiary, setDiary: setDiary };
-  
+  const updateDiary = async (diary, callback) => {
+    try {
+      const { rowsAffected } = await db.updateDiary(diary);
+      setDiaries((prevs) => {
+        const filterDiary = prevs.filter((d) => d.id !== diary.id);
+        const currentDiary = prevs.find((d) => d.id === diary.id);
+        const updatedDiary = { ...currentDiary, ...diary };
+        return [
+          ...filterDiary, updatedDiary
+        ].sort((a, b) => {
+          return (Date.parse(b.date) - Date.parse(a.date));
+
+        });
+      })
+      callback(rowsAffected);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const deleteDiary = async (id) => {
+    try {
+      const { rowsAffected } = await db.deleteDiary(diary);
+      setDiaries((prevs) => {
+        return prevs.filter((p) => p.id != id).sort((a, b) => {
+          return (Date.parse(b.date) - Date.parse(a.date));
+
+        });
+      })
+      callback(rowsAffected);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const goBack = () => {
+    setCurrentScreen(previousScreen);
+    setPreviousScreen('home');
+  };
+
+  const editDiary = (isEdit) => {
+    setDiary(prev => {
+      return { ...prev, edit: isEdit };
+    });
+  };
+
+
+  const methods = {
+    goto: gotoScreen,
+    updateUser: updateUser,
+    insertDiary: insertDiary,
+    updateDiary: updateDiary,
+    deleteDiary: deleteDiary,
+    setDiary: setDiary,
+    goBack: goBack,
+    editDiary: editDiary
+  };
+
   useEffect(() => {
     const init = async () => {
       try {
@@ -64,13 +121,14 @@ export default function App() {
         setUser(user);
         setDiaries(diaries);
         setDiary(diaries[0]);
+
       } catch (error) {
         console.log('error found');
         console.log(error);
         console.log(error.message);
       }
     }
-    
+
     init();
   }, []);
 

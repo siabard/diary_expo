@@ -13,7 +13,7 @@ const Account = ({ style, screenStates, methods }) => {
     const Body = View;
 
     return (
-        <Container style={[style, styles.container]}>
+        <Container style={{...styles.container, ...style}}>
             <StatusBar>
             </StatusBar>
             <View style={styles.header}>
@@ -29,6 +29,7 @@ const Account = ({ style, screenStates, methods }) => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: Colors.DEFAULT,
         flexDirection: 'column',
     }, header: {
